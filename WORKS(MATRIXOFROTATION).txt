@@ -1,0 +1,86 @@
+#include <stdio.h>
+#include <math.h>
+#include <iostream>
+using namespace std;
+int Sign(int Val) {
+  if (Val == 0)  return 0;
+  if (Val > 0)  return Val;
+  else return -Val;
+};
+struct point{
+	public:
+		double x, y;
+		point *po;
+};
+int main(){
+	FILE*file;
+	file=fopen("POINTS.txt","w");
+	point *f, *c, *n, *h;
+	double x, y, Sin, Cos, Vx, Vy;
+	int N, proof=0;
+	cout<<"type in number of points"<<endl;
+	scanf("%d", &N);
+	printf("Type in coordinates (x;y) \n");
+	scanf("%lf %lf", &x, &y);
+	fprintf(file, "%lf  %lf \n", x, y);
+	f=new point;
+	f->x=x; f->y=y;
+	f->po=NULL;
+	c=f;
+	for(int i=0; i<N-1; i++){//writing down elemnts
+		n=new point;
+		scanf("%lf %lf", &x, &y);
+		n->x=x; n->y=y;
+		n->po=NULL;
+		c->po=n;
+		c=n;
+		fprintf(file, "%lf  %lf \n", x, y);
+	}
+	fclose(file);
+	c->po=f;
+	h=f;
+	for(int j=0; j<N; j++){//whole thing
+		proof = 0;
+		c=h; 	Vx=(h->x); Vy=(h->y);
+		for(int i=0; i<N; i++){//moving to the begging of coordinates
+//			h=c->po;
+			c->x = ((c->x)-Vx); c->y = ((c->y)-Vy);//recalculates coordinates
+			cout<<c->x<<"   "<<c->y<<endl;
+			c=c->po;
+		}
+		c=h;//returns for coordinates recalculation
+		h=h->po;//next O(0;0) point 
+		n=h;
+		//calculation of  sin and cos of rotation angle
+		Vx=(n->x);
+		Vy=(n->y);
+		Sin=Vy/sqrt(Vx*Vx+Vy*Vy);
+		Cos=Vx/sqrt(Vx*Vx+Vy*Vy);
+//		cout<< Vy << Vx<<endl;
+		cout<< Sin << Cos<<endl;
+		
+		for(int k=0; k<N-1; k++){//recalculates coordinates and counts proof points
+			c=(c->po);
+			Vx=(c->x); Vy=(c->y);//just in sakes of not adding more variables
+			(c->x)=Vx*Cos+Sin*Vy;
+			(c->y)=Vy*Cos-Sin*Vx;
+			if((c->y)>=0) proof++;
+			else proof--;
+		}
+		cout<<"lol"<< endl;
+		if(N-1-Sign(proof)){//checks for convex or non convex 
+			cout<<"non convex";
+			break;
+		}
+	}
+	if(proof)cout<<"convex";	
+	for(int i=0; i<N; i++){//deletion sequence
+	n=c->po;
+	delete c;
+	c=n;
+	}
+}
+	
+	
+	
+	

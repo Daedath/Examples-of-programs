@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <math.h>
+#include <time.h>
+int N;
+//	int *arrayA, *arrayB;
+void fill(int N, int *array, int i){				 			  //fills up an array A
+	if(i<N){
+		*(array+i)=rand()%89+10;
+		printf("%d ", *(array+i));
+		fill(N, array, i+1);
+	}
+	return;
+	}
+int mmomax(int *leftb, int *rightb, int i, int max){			  //finds max among all
+	if(leftb+i>rightb)return max;
+	if(*(leftb+i)>=max)max=*(leftb+i);			  				 // leftb - left borfer, rightb - right border, i - counter
+	mmomax(leftb, rightb, i+1, max);
+	}
+void pathfinder(int *leftb, int *arrayB, int step, int *arrayA){ //writes down an B array
+//void pathfinder(int leftb, int arrayB, int step){
+	*(arrayB)=mmomax(leftb, leftb+step-1, 0, 0);
+	printf("%d ", *(arrayB));
+	if(step==1&&leftb-arrayA==N-1)return;						  //when we've done all the comparisons
+	else if(leftb+step-arrayA==N){						 		  //when we're finished with searching for max with this step
+		step=((int)step>>1);
+		leftb=arrayA;
+		pathfinder(leftb, arrayB+1, step, arrayA);
+	}
+	else pathfinder(leftb+step, arrayB+1, step, arrayA);
+//  pathfinder(leftb+step, arrayB+1, step);
+}
+int main(){ 
+	srand(time(0));
+	int *arrayA, *arrayB;
+	//
+	printf("type in array's size \n");
+	scanf("%d", &N);
+	arrayA = (int*)malloc(N*sizeof(int));
+	arrayB = (int*)malloc((((int)N<<1)-1)*sizeof(int));
+	fill(N, arrayA, 0);
+	printf("\n");
+	pathfinder(arrayA, arrayB, N, arrayA);
+//	pathfinder(arrayA, arrayB, N/2);
+//	printf("%d ", mmomax(arrayA, arrayA+N-1, 0, 0));
+	
+	free(arrayA);
+	free(arrayB);
+}

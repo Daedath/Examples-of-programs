@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <math.h>
+#include <iostream>
+#include <fstream>
+using namespace std;
+double Min(double a1, double a2){
+	if(a1>a2) return a2;
+	if(a2>a1) return a1;
+	return a1;
+}
+double Max(double a1, double a2){
+	if(a1<a2) return a2;
+	if(a2<a1) return a1;
+	return a1;
+}
+class rectangle{
+	private:
+		double x1, y1, x2, y2, x, X, y, Y;
+		char res=0;
+	public:
+		//creators & destructor + set
+		rectangle();
+		rectangle(double, double, double, double);
+		rectangle(char);
+		~rectangle(){}
+		void set(double, double, double, double);
+		//the ways of displaying & saving
+		void save(ofstream&);
+		friend ostream& operator<<(ostream&, rectangle);
+		//methods
+		rectangle operator*(rectangle&);
+		rectangle operator*(double);
+		friend rectangle operator*(double, rectangle&);// creates a new rectangle from overlap
+		
+};
+//creators & stuff
+rectangle::rectangle(){x1=0; y1=0; x2=1; y2=1; x=0, X=1; y=0; Y=1; res=1;}
+rectangle::rectangle(double xx1, double yy1, double xx2, double yy2){x1=xx1; y1=yy1; x2=xx2; y2=yy2; x=Min(x1,x2), X=Max(x1,x2); y=Min(y1,y2); Y=Max(y1,y2); res=1;}
+rectangle::rectangle(char k){res=k;}
+void rectangle::set(double xx1, double yy1, double xx2, double yy2){x1=xx1; y1=yy1; x2=xx2; y2=yy2; x=Min(x1,x2), X=Max(x1,x2); y=Min(y1,y2); Y=Max(y1,y2); res=1;}
+//display & save
+ostream& operator<<(ostream& os, rectangle V){
+	if(V.res)cout<<"x1 = "<<V.x1<<"   "<<"y1 = "<<V.y1<<"   "<<"x2 = "<<V.x2<<"   "<<"y2 = "<<V.y2<<endl;
+	else cout<<"Rectangle does not exist";
+	return os;
+}
+void rectangle::save(ofstream& fout){cout<<"lol"<<endl; fout<<x1<<"  "<<y1<<"  "<<x2<<"  "<<y2<<endl;}
+//methods
+rectangle rectangle::operator*(double k){return rectangle(x1*k, y1*k, x2*k, y2*k);}
+rectangle rectangle::operator*(rectangle& V2){
+	if(y > V2.Y) return rectangle(0);
+	if(x > V2.X) return rectangle(0);
+	if(Y < V2.y) return rectangle(0);
+	if(X < V2.x) return rectangle(0);
+	cout<<"trololo"<<endl;
+	return rectangle(Max(x, V2.x), Max(y, V2.y), Min(X, V2.X), Min(Y, V2.Y));
+}
+int main(){
+	ofstream fout;
+	fout.open ("Points.txt", ios::trunc);
+	rectangle v1(1, 1, 3, 3), v2(2, 1, 5, 6), v3;
+	v3=v1*v2;
+	cout<<v3;
+	v1.save(fout);
+	v2.save(fout);
+	v3.save(fout);
+	fout.close();
+}

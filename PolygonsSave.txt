@@ -1,0 +1,72 @@
+#include <stdio.h>
+#include <math.h>
+#include <iostream>
+#include <fstream>
+
+using namespace std;
+struct point{
+	double x, y;
+};
+
+class polygon{
+	private:
+		double *A;
+		int N;
+	public:
+		//creators & destructor + set
+		polygon();//                                                                    (1)/DONE
+		polygon(int);//creates a polygon with int N points                              (2)/DONE
+		polygon(const polygon&);//creates a polygon identical to the one in the argument(3)/DONE
+		~polygon(){ if (N != NULL) delete[] A;};//                                      (4)/DONE                             
+		//the ways of displaying & saving
+		void save(ofstream&);//                                                         (5)/
+		friend ostream& operator<<(ostream&, const polygon&);
+		//friend ostream& operator<<(ostream&, polygon);
+		//methods
+		polygon operator*(const polygon&);//creates a polygon on overlap of two others  (6)/
+		polygon operator=(const polygon&);//just equals                                 (7)/DONE
+		polygon& operator[](int);//                                                     (8)/
+};
+//creators & stuff
+
+polygon::polygon(){N = 0; A = Null;}//                                                  [1]
+polygon::polygon(int NN){ N = NN; A = new point[N];}//                                  [2]
+polygon::polygon(const polygon& P){//                                                   [3]
+	if (P.A == NULL) {A = NULL; N = 0; return;}
+	A = new point[N];
+	for (int i = 0; i < N; i++) A[i] = P.A[i];
+}
+polygon polygon::operator=(const polygon& P){//                                         [7]
+	if (this == &v) return *this;
+	if (A != NULL) delete[] A;
+	if (P.A == NULL) {
+		A = NULL; N = 0; return *this;
+	}
+	N = P.N; A = new point[N];
+	for (int i = 0; i < N; i++) A[i] = P.A[i];
+	return *this;
+	}
+
+//void polygon::set(double xx1, double yy1, double xx2, double yy2){x1=xx1; y1=yy1; x2=xx2; y2=yy2; x=Min(x1,x2), X=Max(x1,x2); y=Min(y1,y2); Y=Max(y1,y2); res=1;}
+//display & save
+ostream& operator<<(ostream& os, polygon V){//                                         [5]
+	if(V.res)cout<<"x1 = "<<V.x1<<"   "<<"y1 = "<<V.y1<<"   "<<"x2 = "<<V.x2<<"   "<<"y2 = "<<V.y2<<endl;
+	else cout<<"polygon does not exist";
+	return os;
+}
+void polygon::save(ofstream& fout){}//                                                  []
+//methods
+polygon polygon::operator*(const polygon& P){//                                         []
+
+
+
+
+
+
+}
+int main(){
+	ofstream fout;
+	fout.open ("PointsPolygon.txt", ios::trunc);
+	
+	fout.close();
+}
